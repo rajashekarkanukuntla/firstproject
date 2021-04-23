@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="42bc75db-6a70-4d0b-823e-7c19c04157ed" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="demo_2Flow1" doc:id="a0fe2367-7f6a-4f97-87e0-f6dea23ac9c5" >
+		<http:listener doc:name="Get2" doc:id="00f2af38-562b-4a74-bbd5-386442f40d75" config-ref="HTTP_Listener_config" path="/test" allowedMethods="GET"/>
+		<ee:transform doc:name="Transform Message" doc:id="f933a4b6-d8e3-45c2-90ff-6ba6231f2b54" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"hello world"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="demo_2Flow" doc:id="e088ba91-e823-4fd2-baeb-4dee5562955b" >
+		<http:listener doc:name="GET" doc:id="13301902-b772-4e3f-958c-5aaa29bbb90d" config-ref="HTTP_Listener_config" path="/getdata" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ea200171-1f95-4041-af5b-8a9964bd43b8" message="Get Method"/>
+		<ee:transform doc:name="Transform Message" doc:id="3ddda68d-e66d-4be2-b83f-d07bbd69d400" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+	{"empno":1, "ename":"test1"},
+	
+	{ "empno" : 2,
+  "ename" : "test2"}
+  
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
